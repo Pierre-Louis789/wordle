@@ -14,6 +14,11 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  background-image: url("../assets/images/background-game.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
 }
 
 #app-wrapper {
@@ -29,6 +34,23 @@ body {
   grid-template-columns: 2fr 1fr;
   grid-gap: 20px;
 }
+
+/* ===========================
+   🎬 Intro Screen
+   =========================== */
+
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  color: #00f5d4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+#intro-screen.hidden { display: none; }
 
 /* ===========================
    🕵️ Header & Meta Bar
@@ -51,8 +73,8 @@ body {
   font-size: 0.9rem;
   color: #00f5d4;
   margin-top: 5px;
-  flex-wrap: wrap; /* ✅ refinement: allow wrapping on small screens */
-  gap: 8px;        /* ✅ refinement: spacing when wrapped */
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* ===========================
@@ -82,21 +104,6 @@ body {
   box-shadow: 0 0 10px #ff2e63;
 }
 
-#length-selector {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #fff;
-}
-
-#word-length {
-  background-color: #1a1a2e;
-  color: #00f5d4;
-  border: 2px solid #3a3a3c;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
 /* ===========================
    🎯 Game Area (Grid + Keyboard)
    =========================== */
@@ -113,13 +120,13 @@ body {
   animation: fadeIn 0.3s ease;
 }
 
-
 /* 🎯 Word Grid */
 #game-grid {
   display: grid;
   grid-template-rows: repeat(6, 1fr);
   gap: 12px;
   margin-top: 10px;
+  position: relative; /* anchor for floats */
 }
 
 .guess-row {
@@ -148,7 +155,7 @@ body {
   border-color: #00f5d4;
   color: #0d0d1a;
   transform: scale(1.05);
-  animation: glowPulse 1.5s infinite alternate; /* ✅ enhancement: neon glow pulse */
+  animation: glowPulse 1.5s infinite alternate;
 }
 
 .tile[data-state="present"] {
@@ -173,7 +180,6 @@ body {
   100% { transform: rotateX(0); }
 }
 
-/* ✅ enhancement: glow pulse animation */
 @keyframes glowPulse {
   from { box-shadow: 0 0 6px #00f5d4; }
   to   { box-shadow: 0 0 20px #00f5d4; }
@@ -185,7 +191,7 @@ body {
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-  padding: 0 4px; /* ✅ refinement: spacing on narrow screens */
+  padding: 0 4px;
 }
 
 .key-row {
@@ -219,9 +225,7 @@ body {
   box-shadow: 0 0 6px #ff2e63;
 }
 
-.key.wide {
-  width: 70px;
-}
+.key.wide { width: 70px; }
 
 .key.correct {
   background-color: #00f5d4;
@@ -244,28 +248,28 @@ body {
   box-shadow: none;
 }
 
-/* ✅ refinement: keyboard focus style */
 .key:focus {
   outline: 2px solid #00f5d4;
   outline-offset: 2px;
 }
 
 /* ===========================
-   📊 Sidebar (Score + Clues)
+   📊 Sidebar
    =========================== */
 #sidebar {
   grid-area: sidebar;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  overflow-y: auto;   /* ✅ refinement: scroll safety */
-  max-height: 80vh;   /* ✅ refinement: prevent overflow */
+  overflow-y: auto;
+  max-height: 80vh;
 }
 
 #score-panel {
   font-size: 1.2rem;
   color: #00f5d4;
   text-align: center;
+  position: relative; /* anchor for floats */
 }
 
 #clue-exchange {
@@ -295,9 +299,7 @@ body {
   transition: background-color 0.2s ease;
 }
 
-.clue-btn:hover {
-  background-color: #ff2e63;
-}
+.clue-btn:hover { background-color: #ff2e63; }
 
 .cost {
   background-color: #0d0d1a;
@@ -313,7 +315,9 @@ body {
   color: #ff9f1c;
 }
 
-/* Base float for all point changes */
+/* ===========================
+   💫 Score Floats
+   =========================== */
 .score-float {
   position: absolute;
   font-weight: bold;
@@ -323,24 +327,22 @@ body {
   transform: translateX(-50%);
   pointer-events: none;
   text-shadow: 0 0 6px rgba(0,0,0,0.6);
-  color: #ff4444; /* default red, overridden in JS */
+  color: #ff4444;
 }
 
-/* Special styling for streak floats */
 .score-float.streak {
   font-size: 1.4em;
   text-shadow: 0 0 10px #ff6600, 0 0 20px #ff3300;
 }
 
-/* Shared animation */
 @keyframes floatUp {
   0%   { opacity: 1; transform: translate(-50%, 0); }
   100% { opacity: 0; transform: translate(-50%, -40px); }
 }
+
 /* ===========================
    🏅 Leaderboard Modal
    =========================== */
-
 #leaderboard-modal {
   position: fixed;
   inset: 0;
@@ -350,9 +352,8 @@ body {
   align-items: center;
   z-index: 1001;
 }
-#leaderboard-modal.hidden {
-  display: none;
-}
+#leaderboard-modal.hidden { display: none; }
+
 #leaderboard-modal .modal-content {
   background: #1a1a2e;
   padding: 20px;
@@ -375,12 +376,12 @@ body {
   opacity: 0;
 }
 #dynamic-panel.show {
-  max-height: 500px; /* adjust as needed */
+  max-height: 500px;
   opacity: 1;
 }
 
 /* ===========================
-   📢 Modal
+   📢 Modal (How to Play)
    =========================== */
 #modal-overlay {
   position: fixed;
@@ -395,23 +396,12 @@ body {
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
-
-.modal-overlay.active {
+#modal-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
-
-.modal-overlay.active .modal-content {
-  transform: scale(1);
-}
-
-
-#modal-overlay.hidden {
-  display: none !important;
-}
-.hidden {
-  display: none;
-}
+#modal-overlay.hidden { display: none !important; }
+.hidden { display: none; }
 
 #modal-content {
   background-color: #1a1a2e;
@@ -427,12 +417,10 @@ body {
   transform: scale(0.95);
   transition: transform 0.3s ease;
 }
-
 #modal-content h2 {
   color: #00f5d4;
   margin-bottom: 10px;
 }
-
 #close-modal {
   margin-top: 10px;
   padding: 8px 16px;
@@ -443,6 +431,7 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+#close-modal:hover { background-color: #ff9f1c; }
 
 .modal-buttons {
   display: flex;
@@ -455,24 +444,13 @@ body {
   cursor: pointer;
 }
 
-#close-modal:hover {
-  background-color: #ff9f1c;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  to   { opacity: 1; transform: scale(1); }
 }
+#modal-overlay:focus-within { outline: 2px solid #00f5d4; }
 
-/* ✅ refinement: modal focus trap highlight */
-#modal-overlay:focus-within {
-  outline: 2px solid #00f5d4;
-}
-
-.shake {
-  animation: shake 0.3s;
-}
-
+.shake { animation: shake 0.3s; }
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
@@ -484,7 +462,6 @@ body {
 /* ===========================
    🏆 Endgame Overlay
    =========================== */
-
 #endgame-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -495,10 +472,7 @@ body {
   align-items: center;
   z-index: 1000;
 }
-
-#endgame-overlay.hidden {
-  display: none;
-}
+#endgame-overlay.hidden { display: none; }
 
 #endgame-content {
   background-color: #1a1a2e;
@@ -509,12 +483,10 @@ body {
   width: 350px;
   animation: fadeIn 0.3s ease forwards;
 }
-
 #endgame-content h2 {
   color: #ff2e63;
   margin-bottom: 10px;
 }
-
 #endgame-content p {
   color: #fff;
   margin-bottom: 20px;
@@ -523,7 +495,31 @@ body {
   display: flex;
   justify-content: space-around;
   gap: 10px;
-
+}
+.endgame-buttons #continue-btn {
+  background-color: #00f5d4;
+  color: #0d0d1a;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.endgame-buttons #continue-btn:hover {
+  background-color: #00c9a7;
+}
+.endgame-buttons #restart-btn {
+  background-color: #3a3a3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.endgame-buttons #restart-btn:hover {
+  background-color: #ff2e63;
 }
 
 /* ===========================
@@ -567,10 +563,7 @@ body {
     height: 40px;
     font-size: 0.9rem;
   }
-
-  .key.wide {
-    width: 50px;
-  }
+  .key.wide { width: 50px; }
 
   #modal-content {
     width: 90%;

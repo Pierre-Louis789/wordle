@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LogicLine</title>
-  <meta name="description" content="LogicLine is an immersive word deduction game. Guess the hidden word, earn points, and unlock clues in a cinematic arcade-style experience." />
-  <link rel="stylesheet" href="assets/style.css" />
+  <meta name="description" content="LogicLine is an immersive word deduction game. Guess the hidden word, earn points, and unlock clues in a cinematic arcade-style experience."/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <audio id="bg-music" src="assets/sounds/018136_funny-music-orchestra-wav-54828.mp3" loop></audio>
   <link rel="icon" href="data:,">
 </head>
 <body>
   <div id="app-wrapper">
+    <div id="intro-screen">
+  <h1>🕹️ Welcome to LogicLine</h1>
+  <button id="start-btn">Start Game</button>
+  <button id="sound-toggle">🔊 Toggle Sound</button>
+</div>
+
     <!-- 🕵️ Logo / Title -->
-    <header id="main-header">
+    <header id="main-header" role="banner">
       <h1>🕵️ LogicLine</h1>
-      <div id="meta-bar">
-        <span id="date-time" aria-live="polite">🗓️ Loading...</span>
+      <div id="meta-bar" aria-live="polite">
+        <span id="date-time">🗓️ Loading...</span>
         <span id="weather">🌦️ Weather: --</span>
       </div>
     </header>
@@ -24,14 +31,8 @@
       <button class="nav-btn" id="btn-howto">❓ How to Play</button>
       <button class="nav-btn" id="btn-leaderboard">🏆 Leaderboard</button>
       <button class="nav-btn" id="btn-points">💰 Points</button>
-      <div id="length-selector">
-        <label for="word-length">Word Length:</label>
-        <select id="word-length">
-          <option value="4">4 Letters</option>
-          <option value="5" selected>5 Letters</option>
-          <option value="6">6 Letters</option>
-        </select>
-      </div>
+      <button class="nav-btn" id="daily-mode-btn">📅 Daily Mode</button>
+
     </nav>
 
     <!-- 🎯 Main Game Area -->
@@ -40,9 +41,10 @@
         <!-- Rows generated dynamically -->
       </section>
       <button id="new-game-btn" class="nav-btn hidden">🔄 New Game</button>
+
       <!-- 🎹 Keyboard -->
       <section id="keyboard" aria-label="On-screen keyboard" role="application">
-        <div class="key-row">
+        <div class="key-row" aria-label="Top row keys">
           <button class="key" data-key="Q">Q</button>
           <button class="key" data-key="W">W</button>
           <button class="key" data-key="E">E</button>
@@ -54,7 +56,7 @@
           <button class="key" data-key="O">O</button>
           <button class="key" data-key="P">P</button>
         </div>
-        <div class="key-row">
+        <div class="key-row" aria-label="Home row keys">
           <button class="key" data-key="A">A</button>
           <button class="key" data-key="S">S</button>
           <button class="key" data-key="D">D</button>
@@ -65,7 +67,7 @@
           <button class="key" data-key="K">K</button>
           <button class="key" data-key="L">L</button>
         </div>
-        <div class="key-row">
+        <div class="key-row" aria-label="Bottom row keys">
           <button class="key wide" data-key="Enter">Enter</button>
           <button class="key" data-key="Z">Z</button>
           <button class="key" data-key="X">X</button>
@@ -80,7 +82,7 @@
     </main>
 
     <!-- 📊 Sidebar -->
-    <aside id="sidebar">
+    <aside id="sidebar" aria-label="Sidebar">
       <!-- 🧮 Score Panel -->
       <section id="score-panel">
         <p>Score: <span id="score">0</span></p>
@@ -105,7 +107,7 @@
       </section>
 
       <!-- 🏆 Leaderboard / Points placeholder -->
-      <section id="dynamic-panel">
+      <section id="dynamic-panel" aria-live="polite">
         <!-- Content swapped dynamically -->
       </section>
     </aside>
@@ -124,34 +126,36 @@
       </div>
     </div>
 
-    <div id="leaderboard-modal" class="hidden">
-  <div class="modal-content">
-    <h2>🎉 You Guessed It!</h2>
-    <p>Enter your name for the leaderboard:</p>
-    <input type="text" id="player-name-input" maxlength="20" />
-    <div class="modal-buttons">
-      <button id="save-name-btn">Save</button>
-      <button id="skip-name-btn">Skip</button>
+    <!-- 🏆 Leaderboard Modal -->
+    <div id="leaderboard-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="leaderboard-title">
+      <div class="modal-content">
+        <h2 id="leaderboard-title">🎉 You Guessed It!</h2>
+        <p>Enter your name for the leaderboard:</p>
+        <input type="text" id="player-name-input" maxlength="20"/>
+        <div class="modal-buttons">
+          <button id="save-name-btn">Save</button>
+          <button id="skip-name-btn">Skip</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <!-- 📜 Footer -->
-    <footer id="footer">
+    <footer id="footer" role="contentinfo">
       <p>© 2025 LogicLine | Built with ❤️ for immersive play</p>
     </footer>
   </div>
-  
-  <div id="endgame-overlay" class="hidden">
-  <div id="endgame-content">
-    <h2 id="endgame-title"></h2>
-    <p id="endgame-message"></p>
-    <div class="endgame-buttons">
-  <button id="continue-btn" class="nav-btn">Continue</button>
-  <button id="restart-btn" class="nav-btn">Restart</button>
-</div>
+
+  <!-- 🎬 Endgame Overlay -->
+  <div id="endgame-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="endgame-title">
+    <div id="endgame-content">
+      <h2 id="endgame-title"></h2>
+      <p id="endgame-message"></p>
+      <div class="endgame-buttons">
+        <button id="continue-btn" class="nav-btn">Continue</button>
+        <button id="restart-btn" class="nav-btn">Restart</button>
+      </div>
+    </div>
   </div>
-</div>
 
   <script src="data/wordBank.js"></script>
   <script src="script.js"></script>
